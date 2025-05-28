@@ -1,4 +1,4 @@
-package com.universidade.config;
+package com.universidade.pessoas.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -10,9 +10,10 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI().info(new Info()
-                .title("API Acadêmica de Pessoas")
-                .version("1.0.0")
-                .description("Documentação da API Acadêmica de Pessoas com Cursos"));
+        return new OpenAPI()
+                .info(new Info()
+                        .title("API Acadêmica")
+                        .version("1.0.0")
+                        .description("Documentação da API Acadêmica de Pessoas e Cursos"));
     }
 }
