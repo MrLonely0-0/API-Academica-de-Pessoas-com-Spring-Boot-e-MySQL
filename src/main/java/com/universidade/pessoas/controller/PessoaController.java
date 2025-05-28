@@ -1,47 +1,45 @@
-package com.universidade.pessoas.controller;
+package com.universidade.controller;
 
-import com.universidade.pessoas.dto.PessoaDTO;
-import com.universidade.pessoas.model.Pessoa;
-import com.universidade.pessoas.repository.PessoaRepository;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.universidade.dto.PessoaDTO;
+import com.universidade.model.Pessoa;
+import com.universidade.service.PessoaService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/pessoas/universidade")
+@RequestMapping("/api/pessoas")
+@RequiredArgsConstructor
 public class PessoaController {
 
-    @Autowired
-    private PessoaRepository pessoaRepository;
+    private final PessoaService pessoaService;
 
     @PostMapping
-    public ResponseEntity<Pessoa> createPessoa(@RequestBody PessoaDTO pessoaDto)
-    {
-       
-        Pessoa pessoa = new Pessoa();
-        BeanUtils.copyProperties(pessoaDto, pessoa);
+    public ResponseEntity<Pessoa> criar(@RequestBody @Valid PessoaDTO dto) {
+        return ResponseEntity.ok(pessoaService.criarPessoa(dto));
+    }
 
-        Pessoa savedPessoa = pessoaRepository.save(pessoa);
-
-        System.out.println("Pessoa salva: " + savedPessoa);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPessoa);
+    @GetMapping
+    public ResponseEntity<List<Pessoa>> listar() {
+        return ResponseEntity.ok(pessoaService.listarPessoas());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getPessoaById(@PathVariable UUID id) 
-    {
-        Optional<Pessoa> foundPessoa = pessoaRepository.findById(id);
+    public ResponseEntity<Pessoa> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(pessoaService.buscarPorId(id));
+    }
 
-        if (foundPessoa.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa Not Found");
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body(foundPessoa.get());
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @RequestBody @Valid PessoaDTO dto) {
+        return ResponseEntity.ok(pessoaService.atualizarPessoa(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        pessoaService.deletarPessoa(id);
+        return ResponseEntity.noContent().build();
     }
 }
