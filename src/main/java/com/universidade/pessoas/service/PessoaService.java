@@ -1,68 +1,70 @@
-package com.universidade.service;
+package com.faculdade.pessoa.service;
 
-import com.universidade.dto.PessoaDTO;
-import com.universidade.model.Curso;
-import com.universidade.model.Pessoa;
-import com.universidade.repository.CursoRepository;
-import com.universidade.repository.PessoaRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.faculdade.pessoa.dto.PessoaDTO;
+import com.faculdade.pessoa.model.Pessoa;
+import com.faculdade.pessoa.repository.PessoaRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PessoaService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PessoaService.class);
     private final PessoaRepository pessoaRepository;
-    private final CursoRepository cursoRepository;
 
-    public Pessoa criarPessoa(PessoaDTO dto) {
-        log.info("Criando pessoa: {}", dto.getNome());
-        Curso curso = cursoRepository.findById(dto.getCursoId())
-                .orElseThrow(() -> new EntityNotFoundException("Curso não encontrado"));
+    @Transactional
+    public Pessoa save(Pessoa pessoa) {
+        logger.info("Salvando pessoa com CPF: {}", pessoa.getCpf());
 
-        Pessoa pessoa = Pessoa.builder()
-                .nome(dto.getNome())
-                .cpf(dto.getCpf())
-                .email(dto.getEmail())
-                .curso(curso)
-                .build();
+        if (pessoa.getAge() < 18) {
+            logger.warn("Tentativa de cadastro com idade menor que 18");
+            throw new RuntimeException("Pessoa deve ter idade mínima de 18 anos");
+        }
+
+        Optional<Pessoa> existente = pessoaRepository.findByCpf(pessoa.getCpf());
+        if (existente.isPresent()) {
+            throw new RuntimeException("CPF já cadastrado.");
+        }
 
         return pessoaRepository.save(pessoa);
     }
 
-    public List<Pessoa> listarPessoas() {
+    public List<Pessoa> listAll() {
+        logger.info("Listando todas as pessoas");
         return pessoaRepository.findAll();
     }
 
-    public Pessoa buscarPorId(Long id) {
-        return pessoaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Pessoa não encontrada"));
+    public Optional<Pessoa> findById(UUID id) {
+        logger.info("Buscando pessoa por ID: {}", id);
+        return pessoaRepository.findById(id);
     }
 
-    public Pessoa atualizarPessoa(Long id, PessoaDTO dto) {
-        Pessoa pessoa = pessoaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Pessoa não encontrada"));
-
-        Curso curso = cursoRepository.findById(dto.getCursoId())
-                .orElseThrow(() -> new EntityNotFoundException("Curso não encontrado"));
-
-        pessoa.setNome(dto.getNome());
-        pessoa.setCpf(dto.getCpf());
-        pessoa.setEmail(dto.getEmail());
-        pessoa.setCurso(curso);
-
-        return pessoaRepository.save(pessoa);
+    public Optional<Pessoa> findByCpf(String cpf) {
+        logger.info("Buscando pessoa por CPF: {}", cpf);
+        return pessoaRepository.findByCpf(cpf);
     }
 
-    public void deletarPessoa(Long id) {
-        Pessoa pessoa = pessoaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Pessoa não encontrada"));
+    public Pessoa update(UUID id, Pessoa pessoa) {
+        logger.info("Atualizando pessoa ID: {}", id);
 
-        pessoaRepository.delete(pessoa);
+        return pessoaRepository.findById(id).map(p -> {
+            p.setName(pessoa.getName());
+            p.setCpf(pessoa.getCpf());
+            p.setAge(pessoa.getAge());
+            return pessoaRepository.save(p);
+        }).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+    }
+
+    public void delete(UUID id) {
+        logger.info("Deletando pessoa ID: {}", id);
+        pessoaRepository.deleteById(id);
     }
 }
