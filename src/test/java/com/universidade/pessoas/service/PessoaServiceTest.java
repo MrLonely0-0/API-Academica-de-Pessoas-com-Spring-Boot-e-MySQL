@@ -1,32 +1,45 @@
-package com.faculdade.pessoa.service;
+package com.universidade.pessoa.service;
 
-import com.faculdade.pessoa.model.Pessoa;
-import com.faculdade.pessoa.repository.PessoaRepository;
+import com.universidade.pessoa.dto.PessoaDTO;
+import com.universidade.pessoa.model.Pessoa;
+import com.universidade.pessoa.repository.PessoaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @SpringBootTest
-class PessoaServiceTest {
+public class PessoaServiceTest {
 
     @Autowired
-    PessoaService pessoaService;
+    private PessoaService pessoaService;
 
-    @Autowired
-    PessoaRepository pessoaRepository;
+    @MockBean
+    private PessoaRepository pessoaRepository;
 
     @Test
-    void testBuscarPorCpf() {
-        Pessoa pessoa = new Pessoa();
-        pessoa.setName("Maria Teste");
-        pessoa.setCpf("12345678900");
-        pessoa.setAge(25);
-        pessoaService.save(pessoa);
+    public void deveSalvarPessoaComSucesso() {
+        PessoaDTO dto = new PessoaDTO();
+        dto.setNome("Maria");
+        dto.setCpf("12345678901");
+        dto.setIdade(20);
 
-        Optional<Pessoa> encontrada = pessoaService.findByCpf("12345678900");
-        Assertions.assertTrue(encontrada.isPresent());
+        Pessoa pessoa = new Pessoa();
+        pessoa.setId(UUID.randomUUID());
+        pessoa.setNome(dto.getNome());
+        pessoa.setCpf(dto.getCpf());
+        pessoa.setIdade(dto.getIdade());
+
+        Mockito.when(pessoaRepository.save(Mockito.any(Pessoa.class))).thenReturn(pessoa);
+        Mockito.when(pessoaRepository.existsByCpf(dto.getCpf())).thenReturn(false);
+
+        Pessoa resultado = pessoaService.salvar(dto);
+
+        Assertions.assertEquals(dto.getNome(), resultado.getNome());
     }
 }
