@@ -1,4 +1,4 @@
-package com.universidade.dto;
+package com.universidade.pessoa.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
