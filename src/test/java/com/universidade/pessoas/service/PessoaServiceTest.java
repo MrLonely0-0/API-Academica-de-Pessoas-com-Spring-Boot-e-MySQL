@@ -1,29 +1,34 @@
-package com.universidade.pessoa.service;
+package com.universidade.pessoas.service;
 
-import com.universidade.pessoa.dto.PessoaDTO;
-import com.universidade.pessoa.model.Pessoa;
-import com.universidade.pessoa.repository.PessoaRepository;
-import org.junit.jupiter.api.Assertions;
+import com.universidade.pessoas.dto.PessoaDTO;
+import com.universidade.pessoas.model.Pessoa;
+import com.universidade.pessoas.repository.PessoaRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.UUID;
 
-@SpringBootTest
-public class PessoaServiceTest {
+class PessoaServiceTest {
 
-    @Autowired
-    private PessoaService pessoaService;
-
-    @MockBean
+    @Mock
     private PessoaRepository pessoaRepository;
 
+    @InjectMocks
+    private PessoaService pessoaService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    public void deveSalvarPessoaComSucesso() {
+    void deveSalvarPessoaComSucesso() {
         PessoaDTO dto = new PessoaDTO();
         dto.setNome("Maria");
         dto.setCpf("12345678901");
@@ -40,6 +45,6 @@ public class PessoaServiceTest {
 
         Pessoa resultado = pessoaService.salvar(dto);
 
-        Assertions.assertEquals(dto.getNome(), resultado.getNome());
+        assertEquals(dto.getNome(), resultado.getNome());
     }
 }

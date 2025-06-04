@@ -1,8 +1,8 @@
-package com.universidade.service;
+package com.universidade.pessoas.service;
 
-import com.universidade.dto.CursoDTO;
-import com.universidade.model.Curso;
-import com.universidade.repository.CursoRepository;
+import com.universidade.pessoas.dto.CursoDTO;
+import com.universidade.pessoas.model.Curso;
+import com.universidade.pessoas.repository.CursoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

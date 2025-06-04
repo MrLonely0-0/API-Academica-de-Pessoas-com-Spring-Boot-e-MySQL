@@ -1,6 +1,6 @@
-package com.universidade.repository;
+package com.universidade.pessoas.repository;
 
-import com.universidade.model.Curso;
+import com.universidade.pessoas.model.Curso;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

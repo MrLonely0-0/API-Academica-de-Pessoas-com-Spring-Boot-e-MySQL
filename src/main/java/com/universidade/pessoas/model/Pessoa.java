@@ -1,4 +1,5 @@
-package com.universidade.pessoa.model;
+package com.universidade.pessoas.model;
+
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,13 +18,13 @@ public class Pessoa {
     private UUID id;
 
     @Column(nullable = false)
-    private String name;
+    private String nome;
 
     @Column(nullable = false, unique = true, length = 11)
     private String cpf;
 
     @Column(nullable = false)
-    private int age;
+    private int idade;
 
     // Relacionamento com Curso (Muitos para Muitos)
     @ManyToMany
@@ -38,9 +39,9 @@ public class Pessoa {
     public String toString() {
         return "Pessoa{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + nome + '\'' +
                 ", cpf='" + cpf + '\'' +
-                ", age=" + age +
+                ", age=" + idade +
                 '}';
     }
 }

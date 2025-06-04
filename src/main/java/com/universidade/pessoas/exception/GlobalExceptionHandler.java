@@ -1,4 +1,4 @@
-package com.faculdade.pessoa.exception;
+package com.universidade.pessoas.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

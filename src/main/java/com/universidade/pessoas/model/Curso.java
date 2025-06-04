@@ -1,4 +1,4 @@
-package com.universidade.model;
+package com.universidade.pessoas.model;
 
 import jakarta.persistence.*;
 import lombok.*;

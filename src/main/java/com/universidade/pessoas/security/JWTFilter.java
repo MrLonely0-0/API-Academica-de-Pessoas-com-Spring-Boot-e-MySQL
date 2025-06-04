@@ -1,4 +1,4 @@
-package com.universidade.security;
+package com.universidade.pessoas.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

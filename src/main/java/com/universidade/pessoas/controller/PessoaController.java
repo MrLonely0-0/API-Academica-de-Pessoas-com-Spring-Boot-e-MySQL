@@ -1,7 +1,8 @@
-package com.faculdade.pessoa.controller;
+package com.universidade.pessoas.controller;
 
-import com.faculdade.pessoa.model.Pessoa;
-import com.faculdade.pessoa.service.PessoaService;
+import com.universidade.pessoas.model.Pessoa;
+import com.universidade.pessoas.dto.PessoaDTO;
+import com.universidade.pessoas.service.PessoaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,37 +19,37 @@ public class PessoaController {
     private final PessoaService pessoaService;
 
     @PostMapping
-    public ResponseEntity<Pessoa> create(@RequestBody Pessoa pessoa) {
-        return ResponseEntity.ok(pessoaService.save(pessoa));
+    public ResponseEntity<Pessoa> create(@RequestBody PessoaDTO pessoaDto) {
+        return ResponseEntity.ok(pessoaService.salvar(pessoaDto));
     }
 
     @GetMapping
     public ResponseEntity<List<Pessoa>> listAll() {
-        return ResponseEntity.ok(pessoaService.listAll());
+        return ResponseEntity.ok(pessoaService.listar());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Pessoa> getById(@PathVariable UUID id) {
-        Optional<Pessoa> pessoa = pessoaService.findById(id);
+        Optional<Pessoa> pessoa = Optional.ofNullable(pessoaService.buscarPorId(id));
         return pessoa.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<Pessoa> getByCpf(@PathVariable String cpf) {
-        Optional<Pessoa> pessoa = pessoaService.findByCpf(cpf);
+        Optional<Pessoa> pessoa = Optional.ofNullable(pessoaService.buscarPorCpf(cpf));
         return pessoa.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Pessoa> update(@PathVariable UUID id, @RequestBody Pessoa pessoa) {
-        return ResponseEntity.ok(pessoaService.update(id, pessoa));
+        return ResponseEntity.ok(pessoaService.atualizar(id, pessoa));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        pessoaService.delete(id);
+        pessoaService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 }

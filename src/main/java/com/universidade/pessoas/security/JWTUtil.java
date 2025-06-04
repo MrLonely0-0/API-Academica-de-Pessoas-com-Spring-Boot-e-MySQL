@@ -1,8 +1,9 @@
-package com.universidade.security;
+package com.universidade.pessoas.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -17,7 +18,7 @@ public class JWTUtil {
         return Jwts.builder()
                 .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS512, secret.getBytes()) // <- correção aqui
                 .compact();
     }
 
@@ -36,6 +37,11 @@ public class JWTUtil {
     }
 
     private Claims getClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        JwtParser parser = Jwts
+                .parserBuilder()
+                .setSigningKey(secret.getBytes())
+                .build();
+
+        return parser.parseClaimsJws(token).getBody();
     }
 }
