@@ -1,8 +1,8 @@
-package com.universidade.controller;
+package com.universidade.pessoas.controller;
 
-import com.universidade.dto.CursoDTO;
-import com.universidade.model.Curso;
-import com.universidade.service.CursoService;
+import com.universidade.pessoas.dto.CursoDTO;
+import com.universidade.pessoas.model.Curso;
+import com.universidade.pessoas.service.CursoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

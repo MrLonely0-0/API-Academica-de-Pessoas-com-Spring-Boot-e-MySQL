@@ -1,6 +1,6 @@
-package com.universidade.controller;
+package com.universidade.pessoas.controller;
 
-import com.universidade.security.JWTUtil;
+import com.universidade.pessoas.security.JWTUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
